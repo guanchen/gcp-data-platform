@@ -4,6 +4,6 @@ bigquery_dev:
     dev:
       type: bigquery
       method: oauth
-      project: week1-350310
-      dataset: week1_350310_dataset_dev
+      project: "{{ env_var('GCP_PROJECT') }}"
+      dataset: data_warehouse_dev
       threads: 1
