@@ -59,6 +59,7 @@ resource "google_composer_environment" "this" {
 
       env_variables = {
         DATA_FOLDER = "/home/airflow/gcs/data"
+        ENVIRONMENT = var.environment
       }
 
       pypi_packages = {
