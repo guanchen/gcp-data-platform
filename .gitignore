@@ -1,0 +1,9 @@
+# Local Terraform directories and files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+
+# Local dbt directories and files
+**/logs/*
+**/target/*
+**/packages/*

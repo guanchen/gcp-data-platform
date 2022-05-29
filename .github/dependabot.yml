@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "terraform"
+    directory: "terraform/environments/dev/"
+    schedule:
+      interval: "daily"

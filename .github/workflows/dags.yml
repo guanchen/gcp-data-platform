@@ -1,0 +1,45 @@
+name: dags
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'dags/**.py'
+      - config-files/composer-bucket-*
+
+permissions:
+  contents: read
+
+jobs:
+  get-composer-buckets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - id: get-dev
+        run: echo "::set-output name=bucket::$(cat config-files/composer-bucket-dev)"
+    
+    outputs:
+      dev: ${{ steps.get-dev.outputs.bucket}}
+
+  synchronize-bucket-folder-dags-dev:
+    needs: get-composer-buckets
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - id: auth
+      uses: google-github-actions/auth@v0
+      with:
+        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+
+    - name: Synchronize GCS bucket folder dags/
+      run: gsutil -m rsync -d -r  -x ".*\.md$" dags gs://${{ needs.get-composer-buckets.outputs.dev }}/dags
