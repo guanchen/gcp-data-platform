@@ -4,3 +4,9 @@ updates:
     directory: "terraform/environments/dev/"
     schedule:
       interval: "daily"
+
+updates:
+  - package-ecosystem: "pip"
+    directory: "terraform/modules/workflow-platform/"
+    schedule:
+      interval: "daily"

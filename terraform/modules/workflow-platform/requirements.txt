@@ -1,0 +1,4 @@
+dbt-bigquery==1.1.0
+dbt-core==1.1.0
+hologram==0.0.14
+jsonschema<3.2,>=3.0
