@@ -22,6 +22,7 @@ DATA_LAKE_NAME = f"{GCP_PROJECT}-data-lake-{ENV}"
 DATA_WAREHOUSE_NAME = f"data_warehouse_{ENV}"
 URL = "https://s3.amazonaws.com/amazon-reviews-pds/tsv/sample_us.tsv"
 
+
 # Airflow pipeline
 with DAG(
     default_args={
