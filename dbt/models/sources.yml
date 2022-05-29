@@ -1,9 +1,13 @@
 version: 2
 
-# https://docs.getdbt.com/reference/source-properties
 sources:
   - name: bq_dataset
-    dataset: data_warehouse_dev # schema / dataset (bq)
-    project: "{{ env_var('GCP_PROJECT') }}" # database / project (bq)
+    dataset: |
+      {%- if  target.name == "dev" -%} data_warehouse_dev
+      {%- if  target.name == "staging" -%} data_warehouse_staging
+      {%- if  target.name == "prod" -%} data_warehouse_prod
+      {%- else -%} invalid_database
+      {%- endif -%}
+    project: "{{ env_var('GCP_PROJECT') }}"
     tables:
       - name: raw_table
