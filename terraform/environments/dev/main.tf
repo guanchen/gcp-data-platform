@@ -20,7 +20,7 @@ module "data_lake" {
 module "data_warehouse" {
   source = "../../modules/data-warehouse"
 
-  dataset_id       = local.bigquery_dataset
+  dataset_id       = "data_warehouse_dev"
   dataset_location = local.data_location # Needs to match bucket_location for data transfer
   environment      = local.environment
   gcp_project_id   = local.gcp_project_id
