@@ -3,7 +3,7 @@ version: 2
 # https://docs.getdbt.com/reference/source-properties
 sources:
   - name: bq_dataset
-    dataset: week1_350310_dataset_dev # schema / dataset (bq)
-    project: week1-350310 # database / project (bq)
+    dataset: data_warehouse_dev # schema / dataset (bq)
+    project: "{{ env_var('GCP_PROJECT') }}" # database / project (bq)
     tables:
       - name: raw_table
