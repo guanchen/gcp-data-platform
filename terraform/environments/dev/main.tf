@@ -11,7 +11,7 @@ module "data_lake" {
   source = "../../modules/data-lake"
 
   bucket_location = local.data_location # Needs to match dataset_location for data transfer
-  bucket_name     = "${local.gcp_project_id}-bucket-${local.environment}"
+  bucket_name     = "${local.gcp_project_id}-data-lake-${local.environment}"
   environment     = local.environment
   gcp_project_id  = local.gcp_project_id
   labels          = local.labels
