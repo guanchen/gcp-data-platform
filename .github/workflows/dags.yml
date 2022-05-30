@@ -31,7 +31,8 @@ jobs:
         run: |
           sudo apt install -y jq
           terraform init
-          echo "::set-output name=bucket::$(terraform output -json | jq -r '.airflow_dags_gcs_prefix.value')"
+          BUCKET=(terraform output -json | jq -r '.airflow_dags_gcs_prefix.value')
+          echo "::set-output name=bucket::$BUCKET"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         working-directory: terraform/environments/dev
