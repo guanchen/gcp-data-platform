@@ -72,15 +72,9 @@ with DAG(
             nb_rows = len(csv_dataframe.index)
 
             task_instance = kwargs["ti"]
-            task_instance.xcom_push(
-                key="nb_rows", value=nb_rows
-            )  # Push number of rows as 'nb_rows'
-            task_instance.xcom_push(
-                key="file_name", value=tmp_file
-            )  # Push filename as 'file_name'
-            task_instance.xcom_push(
-                key="tmp_file_path", value=tmp_file_path
-            )  # Push file path as 'tmp_file_path'
+            task_instance.xcom_push(key="nb_rows", value=nb_rows)
+            task_instance.xcom_push(key="file_name", value=tmp_file)
+            task_instance.xcom_push(key="tmp_file_path", value=tmp_file_path)
 
         except requests.exceptions.ConnectionError:
             print(f"Could not connect to {url}.")
