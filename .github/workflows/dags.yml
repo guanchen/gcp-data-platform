@@ -34,7 +34,6 @@ jobs:
           sudo apt install -y jq
           terraform init
           terraform output -json >> outputs.json
-          cat outputs.json
           echo "::set-output name=bucket::$(jq -r '.airflow_dags_gcs_prefix.value' outputs.json)"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
@@ -60,4 +59,4 @@ jobs:
       uses: google-github-actions/setup-gcloud@v0
 
     - name: Synchronize Cloud Composer bucket folder dags/ in dev
-      run: gsutil -m rsync -d -r  -x ".*\.md$" dags gs://${{ needs.get-composer-buckets.outputs.dev }}
+      run: gsutil -m rsync -d -r  -x ".*\.md$" dags ${{ needs.get-composer-buckets.outputs.dev }}
