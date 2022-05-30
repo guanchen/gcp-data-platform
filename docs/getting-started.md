@@ -161,12 +161,6 @@ The content of this bucket is automatically filled by Cloud Composer as below
 Upload the dbt folder in the folder 'data/' you have previously configured.
 
 
-## Enable synchronization between Cloud Composer bucket and GitHub (Optional)
+## Synchronization between Cloud Composer bucket and GitHub 
 In the precedent steps we have explained how to upload your dbt and dags folders to the GCS bucket used by Composer.  
-It is possible to synchronize your folders each time you push new code via GitHub Actions.  
-You need to modify the file [composer-bucket-{dev/staging/prod}](../config-files/composer-bucket-dev) 
-```bash
-# config-files/composer-bucket-{dev/staging/prod}
-
-{bucket_name}
-```
+If you gave GCP credentials to GitHub Actions via a repository secret, it will synchronize the bucket for you every time you update the folders dags and/or dbt.

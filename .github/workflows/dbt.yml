@@ -1,13 +1,18 @@
 name: dbt
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'dbt/**.sql'
+      - 'dbt/**.yml'
   push:
     branches:
       - main
     paths:
       - 'dbt/**.sql'
       - 'dbt/**.yml'
-      - config-files/composer-bucket-*
 
 permissions:
   contents: read
@@ -20,9 +25,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
       - id: get-dev
-        run: echo "::set-output name=bucket::$(cat config-files/composer-bucket-dev)"
-    
+        name: Get Cloud Composer bucket in dev
+        run: |
+          sudo apt install -y jq
+          terraform init
+          terraform output -json >> outputs.json
+          echo "::set-output name=bucket::$(jq -r '.airflow_dags_gcs_prefix.value' outputs.json)"
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        working-directory: terraform/environments/dev
+
     outputs:
       dev: ${{ steps.get-dev.outputs.bucket}}
 
@@ -42,5 +60,5 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
 
-    - name: Synchronize GCS bucket folder dbt/
-      run: gsutil -m rsync -d -r  -x ".*\.md$" dbt gs://${{ needs.get-composer-buckets.outputs.dev }}/dbt
+    - name: Synchronize Cloud Composer bucket folder dbt/ in dev
+      run: gsutil -m rsync -d -r  -x ".*\.md$" dbt ${{ needs.get-composer-buckets.outputs.dev }}
