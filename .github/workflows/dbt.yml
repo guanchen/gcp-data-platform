@@ -33,8 +33,12 @@ jobs:
 
       - id: get-dev
         name: Get Cloud Composer bucket in dev
-        run: echo "::set-output name=bucket::$(terraform output -json | jq -r '.airflow_dags_gcs_prefix.value' | sed "s/dags/data\/dbt/")"
-          working-directory: terraform/environments/dev
+        run: |
+          terraform init
+          echo "::set-output name=bucket::$(terraform output -json | jq -r '.airflow_dags_gcs_prefix.value' | sed "s/dags/data\/dbt/")"
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        working-directory: terraform/environments/dev
 
     outputs:
       dev: ${{ steps.get-dev.outputs.bucket}}
