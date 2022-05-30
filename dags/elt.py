@@ -127,4 +127,10 @@ with DAG(
         dag=dag,
     )
 
-    download_file >> upload_data_to_gcs >> gcs_to_bq >> deduplicate_raw_data >> dbt_test
+    transform_data = BashOperator(
+        task_id='dbt_transform',
+        bash_command=f"dbt run --select partitioned_data --profiles-dir {DBT_FOLDER} --project-dir {DBT_FOLDER}",
+        dag=dag,
+    )
+
+    download_file >> upload_data_to_gcs >> gcs_to_bq >> deduplicate_raw_data >> dbt_test >> transform_data
