@@ -26,14 +26,12 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
-      - name: Install jq
-        run: sudo apt install -y jq
-
       - id: get-dev
         name: Get Cloud Composer bucket in dev
         run: |
+          sudo apt install -y jq
           terraform init
-          run: echo "::set-output name=bucket::$(terraform output -json | jq -r '.airflow_dags_gcs_prefix.value')"
+          echo "::set-output name=bucket::$(terraform output -json | jq -r '.airflow_dags_gcs_prefix.value')"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         working-directory: terraform/environments/dev
