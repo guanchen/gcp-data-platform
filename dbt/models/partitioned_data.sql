@@ -10,4 +10,4 @@
         ) 
     }}
 
-SELECT * FROM {{ source('bq_dataset', 'deduplicated_raw_table') }}
+SELECT * FROM {{ ref('deduplicated_raw_data') }}
