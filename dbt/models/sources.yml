@@ -4,8 +4,8 @@ sources:
   - name: bq_dataset
     dataset: |
       {%- if  target.name == "dev" -%} data_warehouse_dev
-      {%- if  target.name == "staging" -%} data_warehouse_staging
-      {%- if  target.name == "prod" -%} data_warehouse_prod
+      {%- elif  target.name == "staging" -%} data_warehouse_staging
+      {%- elif  target.name == "prod" -%} data_warehouse_prod
       {%- else -%} invalid_database
       {%- endif -%}
     project: "{{ env_var('GCP_PROJECT') }}"
