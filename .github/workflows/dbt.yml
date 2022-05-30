@@ -27,14 +27,19 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-
-      - name: Install jq
-        run: sudo apt install -y jq
+        with:
+          terraform_wrapper: false
 
       - id: get-dev
         name: Get Cloud Composer bucket in dev
-        run: echo "::set-output name=bucket::$(terraform output -json | jq -r '.airflow_dags_gcs_prefix.value' | sed "s/dags/data\/dbt/")"
-          working-directory: terraform/environments/dev
+        run: |
+          sudo apt install -y jq
+          terraform init
+          terraform output -json >> outputs.json
+          echo "::set-output name=bucket::$(jq -r '.airflow_dags_gcs_prefix.value' outputs.json)"
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        working-directory: terraform/environments/dev
 
     outputs:
       dev: ${{ steps.get-dev.outputs.bucket}}
@@ -56,4 +61,4 @@ jobs:
       uses: google-github-actions/setup-gcloud@v0
 
     - name: Synchronize Cloud Composer bucket folder dbt/ in dev
-      run: gsutil -m rsync -d -r  -x ".*\.md$" dbt gs://${{ needs.get-composer-buckets.outputs.dev }}
+      run: gsutil -m rsync -d -r  -x ".*\.md$" dbt ${{ needs.get-composer-buckets.outputs.dev }}
