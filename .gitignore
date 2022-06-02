@@ -7,3 +7,4 @@
 **/logs/*
 **/target/*
 **/packages/*
+**/.user.yml
