@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  lint-python-code:
+  lint-dags:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,7 +24,7 @@ jobs:
         with:
           src: "./dags"
 
-  test-load-dags:
+  load-dags:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
         run: python dags/*
 
   get-composer-buckets:
-    needs: test-load-dags
+    needs: [lint-dags, load-dags]
     runs-on: ubuntu-latest
 
     steps:
