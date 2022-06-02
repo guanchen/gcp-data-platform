@@ -1,3 +1,5 @@
+apache-airflow==2.2.3
+apache-airflow-providers-google==6.7.0
 dbt-bigquery==1.1.0
 dbt-core==1.1.0
 hologram==0.0.14
