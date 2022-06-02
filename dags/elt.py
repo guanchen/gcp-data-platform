@@ -8,14 +8,16 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import (
     LocalFilesystemToGCSOperator,
 )
-from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
+from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
+    GCSToBigQueryOperator,
+)
 
 # Environment variables
-DAGS_FOLDER = os.environ.get("DAGS_FOLDER")
-DATA_FOLDER = os.environ.get("DATA_FOLDER")
+DAGS_FOLDER = os.environ.get("DAGS_FOLDER", "/dags/")
+DATA_FOLDER = os.environ.get("DATA_FOLDER", "/data/")
 DBT_FOLDER = DATA_FOLDER + "/dbt"
-ENV = os.environ.get("ENVIRONMENT")
-GCP_PROJECT = os.environ.get("GCP_PROJECT")
+ENV = os.environ.get("ENVIRONMENT", "dev")
+GCP_PROJECT = os.environ.get("GCP_PROJECT", "project")
 
 # Parameters
 DATA_LAKE_NAME = f"{GCP_PROJECT}-data-lake-{ENV}"
@@ -81,7 +83,6 @@ with DAG(
 
     download_file = PythonOperator(
         task_id="download",
-        provide_context=True,
         python_callable=download_file,
         op_kwargs={"url": URL},
         dag=dag,
@@ -94,7 +95,7 @@ with DAG(
         bucket=DATA_LAKE_NAME,
     )
 
-    gcs_to_bq = GoogleCloudStorageToBigQueryOperator(
+    gcs_to_bq = GCSToBigQueryOperator(
         task_id="gcs_to_bq",
         bucket=DATA_LAKE_NAME,
         source_objects=["{{ti.xcom_pull(task_ids='download', key='file_name')}}"],
