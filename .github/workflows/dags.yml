@@ -43,6 +43,7 @@ jobs:
         run: python dags/*
 
   get-composer-buckets:
+    needs: test-load-dags
     runs-on: ubuntu-latest
 
     steps:
